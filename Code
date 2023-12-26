@@ -1,0 +1,57 @@
+from tkinter import *
+from gtts import gTTS
+from playsound import playsound
+
+class GradientButton(Button):
+    def __init__(self, master=None, **kwargs):
+        Button.__init__(self, master, **kwargs)
+        self.bind("<Enter>", self.on_enter)
+        self.bind("<Leave>", self.on_leave)
+
+    def on_enter(self, event):
+        self.configure(background='#4CAF50', foreground='black')
+
+    def on_leave(self, event):
+        self.configure(background='#45a049', foreground='white')
+
+root = Tk()
+root.geometry("450x400")
+root.configure(bg='#ffeaa7')
+root.title("Ananta's-TEXT TO SPEECH")
+
+Label(root, text="TEXT_TO_SPEECH", font="arial 20 bold", bg='#00cec9').pack()
+Label(text="Ananta's", font='arial 15 bold', bg='#00cec9', width='20').pack(side='bottom')
+
+Msg = StringVar()
+Label(root, text="Enter Text", font='arial 15 bold', bg='#00cec9').place(x=20, y=60)
+
+entry_field = Entry(root, textvariable=Msg, width='50')
+entry_field.place(x=20, y=100)
+
+# Function to convert text to speech
+def Text_to_speech():
+    Message = entry_field.get()
+    speech = gTTS(text=Message)
+    speech.save('Output.mp3')
+    playsound('Output.mp3')
+
+def Exit():
+    root.destroy()
+
+def Reset():
+    Msg.set("")
+
+# Define buttons
+GradientButton(root, text="PLAY", font='arial 15 bold', command=Text_to_speech, width='4', bg='#2ecc71').place(x=25, y=140)
+GradientButton(root, font='arial 15 bold', text='EXIT', width='4', command=Exit, bg='#e74c3c').place(x=100, y=140)
+GradientButton(root, font='arial 15 bold', text='RESET', width='6', command=Reset, bg='#3498db').place(x=175, y=140)
+
+# Volume control using ttk.Scale
+volume_label = Label(root, text="Volume", font='arial 15 bold', bg='#00cec9')
+volume_label.place(x=20, y=280)
+
+volume_var = DoubleVar()
+volume_slider = Scale(root, from_=0, to=100, orient=HORIZONTAL, variable=volume_var, length=400, bg='#00cec9', fg='#2d3436')
+volume_slider.place(x=20, y=320)
+
+root.mainloop()
